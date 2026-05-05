@@ -1,6 +1,8 @@
-# Macro Copier
+# VBA Macro Copier
 # Copyright (c) 2026 Bo Sundgaard — www.uniteapps.dk
 # MIT License
+
+__version__ = "1.00"
 
 import sys
 import zipfile
@@ -87,7 +89,7 @@ def inject_macros(source_path: Path, target_path: Path, output_path: Path):
 class MacroCopierApp(ttk.Window):
     def __init__(self):
         super().__init__(themename="litera")
-        self.title("Macro Copier")
+        self.title(f"VBA Macro Copier v{__version__}")
         self.minsize(640, 580)
         self.resizable(True, True)
 

@@ -1,13 +1,13 @@
 @echo off
-REM Macro Copier - Nuitka Build Script
+REM VBA Macro Copier - Nuitka Build Script
 REM Kompilerer macro_copier.py til standalone executable
 
 setlocal enabledelayedexpansion
 
 echo.
 echo ========================================
-echo Macro Copier - Nuitka Build Script
-echo ========================================
+echo VBA Macro Copier - Nuitka Build Script
+echo =========================================
 echo.
 
 REM 1. Check Python Installation
@@ -41,6 +41,7 @@ python -m nuitka ^
     --output-dir=dist ^
     --enable-plugin=tk-inter ^
     --windows-console-mode=disable ^
+    --windows-icon-from-ico=icon.ico ^
     macro_copier.py
 
 if errorlevel 1 (
@@ -52,7 +53,7 @@ echo   * Kompilering gennemfort!
 REM 4. Test af executable
 echo [4/4] Tester executable...
 
-set exePath=dist\macro_copier.exe
+set exePath=dist\vba_macro_copier.exe
 
 if not exist "%exePath%" (
     echo   X Executable ikke fundet!
