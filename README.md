@@ -70,7 +70,10 @@ macro-copier/
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License with Commons Clause — see [LICENSE](LICENSE) for details.
+
+This allows use, copying, modification, and redistribution, but it does not
+allow selling the software or offering it as a commercial service.
 
 ---
 
