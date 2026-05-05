@@ -94,6 +94,10 @@ class MacroCopierApp(ttk.Window):
         self._source_var = tk.StringVar()
         self._target_paths: list[str] = []
 
+        icon = Path(__file__).parent / "icon.ico"
+        if icon.exists():
+            self.iconbitmap(str(icon))
+
         self._build_ui()
 
         src = find_source_file()

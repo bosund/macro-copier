@@ -1,4 +1,4 @@
-# Macro Copier
+# Macro Cloner - Standalone Macro Copier for Microsoft Excel Files
 
 A lightweight desktop tool for copying VBA macros from a source Excel file into one or more target `.xlsx` files — without requiring Excel to be open.
 
