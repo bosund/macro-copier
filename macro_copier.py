@@ -86,9 +86,9 @@ def inject_macros(source_path: Path, target_path: Path, output_path: Path):
 
 class MacroCopierApp(ttk.Window):
     def __init__(self):
-        super().__init__(themename="cosmo")
+        super().__init__(themename="litera")
         self.title("Macro Copier")
-        self.minsize(620, 520)
+        self.minsize(640, 580)
         self.resizable(True, True)
 
         self._source_var = tk.StringVar()
@@ -101,80 +101,98 @@ class MacroCopierApp(ttk.Window):
             self._source_var.set(str(src))
 
     def _build_ui(self):
-        pad = {"padx": 14, "pady": 6}
+        P = 16  # base padding
 
-        # Source
-        src_frame = ttk.LabelFrame(self, text="Source file (source.xlsm)")
-        src_frame.pack(fill=X, **pad, ipadx=6, ipady=6)
-        ttk.Entry(src_frame, textvariable=self._source_var, state="readonly").pack(
-            side=LEFT, fill=X, expand=True, padx=(6, 8), pady=4
-        )
-        ttk.Button(src_frame, text="Browse...", command=self._browse_source, width=10).pack(side=LEFT, padx=(0, 6))
-
-        # Targets
-        tgt_frame = ttk.LabelFrame(self, text="Target files (.xlsx)")
-        tgt_frame.pack(fill=BOTH, expand=True, **pad, ipadx=6, ipady=6)
-
-        list_frame = ttk.Frame(tgt_frame)
-        list_frame.pack(fill=BOTH, expand=True)
-        sb = ttk.Scrollbar(list_frame)
-        sb.pack(side=RIGHT, fill=Y)
-        self._listbox = tk.Listbox(
-            list_frame,
-            yscrollcommand=sb.set,
-            selectmode=tk.EXTENDED,
-            height=8,
-            font=("Segoe UI", 10),
-            activestyle="none",
-            relief="solid",
-            bd=1,
-        )
-        self._listbox.pack(side=LEFT, fill=BOTH, expand=True)
-        sb.config(command=self._listbox.yview)
-
-        btn_row = ttk.Frame(tgt_frame)
-        btn_row.pack(fill=X, pady=(8, 0))
-        ttk.Button(btn_row, text="Add files...", command=self._browse_targets).pack(side=LEFT, padx=(0, 6))
-        ttk.Button(btn_row, text="Remove selected", command=self._remove_selected).pack(side=LEFT, padx=(0, 6))
-        ttk.Button(btn_row, text="Clear list", command=self._clear_list, bootstyle="secondary").pack(side=LEFT)
-
-        # Action
-        self._copy_btn = ttk.Button(
-            self,
-            text="Copy macros",
-            command=self._run_copy,
-            bootstyle="success",
-            width=24,
-        )
-        self._copy_btn.pack(pady=(4, 8))
-
-        # Log
-        log_frame = ttk.LabelFrame(self, text="Log")
-        log_frame.pack(fill=BOTH, expand=True, **pad)
-        log_sb = ttk.Scrollbar(log_frame)
-        log_sb.pack(side=RIGHT, fill=Y)
-        self._log = tk.Text(
-            log_frame,
-            height=8,
-            font=("Segoe UI", 10),
-            state="disabled",
-            relief="solid",
-            bd=1,
-            yscrollcommand=log_sb.set,
-        )
-        self._log.pack(fill=BOTH, expand=True)
-        log_sb.config(command=self._log.yview)
-        self._log.tag_config("ok", foreground="#198754")
-        self._log.tag_config("err", foreground="#dc3545")
-        self._log.tag_config("info", foreground="#0d6efd")
-
-        # Credits
+        # ── Status bar (packed first so it anchors to bottom) ────
+        ttk.Separator(self, orient=HORIZONTAL).pack(side=BOTTOM, fill=X)
+        status_bar = ttk.Frame(self)
+        status_bar.pack(side=BOTTOM, fill=X, padx=P, pady=5)
         ttk.Label(
-            self,
+            status_bar,
             text="Bo Sundgaard 2026  ·  www.uniteapps.dk",
             font=("Segoe UI", 8),
-            foreground="#888888",
-        ).pack(pady=(2, 8))
+            foreground="#999999",
+        ).pack(side=RIGHT)
+
+        # ── Main content ─────────────────────────────────────────
+        content = ttk.Frame(self)
+        content.pack(fill=BOTH, expand=True, padx=P, pady=P)
+
+        # Section: Source file
+        ttk.Label(content, text="Source file", font=("Segoe UI", 9, "bold")).pack(anchor=W)
+        src_row = ttk.Frame(content)
+        src_row.pack(fill=X, pady=(4, 0))
+        ttk.Entry(src_row, textvariable=self._source_var, state="readonly").pack(
+            side=LEFT, fill=X, expand=True, padx=(0, 6)
+        )
+        ttk.Button(src_row, text="Browse…", command=self._browse_source, width=10).pack(side=LEFT)
+
+        ttk.Separator(content, orient=HORIZONTAL).pack(fill=X, pady=(14, 12))
+
+        # Section: Target files
+        ttk.Label(content, text="Target files (.xlsx)", font=("Segoe UI", 9, "bold")).pack(anchor=W)
+
+        list_border = ttk.Frame(content, relief="solid", borderwidth=1)
+        list_border.pack(fill=BOTH, expand=True, pady=(4, 0))
+        list_sb = ttk.Scrollbar(list_border)
+        list_sb.pack(side=RIGHT, fill=Y)
+        self._listbox = tk.Listbox(
+            list_border,
+            yscrollcommand=list_sb.set,
+            selectmode=tk.EXTENDED,
+            font=("Segoe UI", 10),
+            activestyle="none",
+            relief="flat",
+            bd=0,
+            highlightthickness=0,
+        )
+        self._listbox.pack(side=LEFT, fill=BOTH, expand=True, padx=2, pady=2)
+        list_sb.config(command=self._listbox.yview)
+
+        tgt_btn_row = ttk.Frame(content)
+        tgt_btn_row.pack(fill=X, pady=(6, 0))
+        ttk.Button(tgt_btn_row, text="Add files…", command=self._browse_targets).pack(side=LEFT, padx=(0, 4))
+        ttk.Button(tgt_btn_row, text="Remove selected", command=self._remove_selected).pack(side=LEFT, padx=(0, 4))
+        ttk.Button(tgt_btn_row, text="Clear list", command=self._clear_list, bootstyle="secondary-outline").pack(side=LEFT)
+
+        ttk.Separator(content, orient=HORIZONTAL).pack(fill=X, pady=(14, 12))
+
+        # Section: Log
+        ttk.Label(content, text="Output log", font=("Segoe UI", 9, "bold")).pack(anchor=W)
+
+        log_border = ttk.Frame(content, relief="solid", borderwidth=1)
+        log_border.pack(fill=BOTH, expand=True, pady=(4, 0))
+        log_sb = ttk.Scrollbar(log_border)
+        log_sb.pack(side=RIGHT, fill=Y)
+        self._log = tk.Text(
+            log_border,
+            height=7,
+            font=("Consolas", 9),
+            state="disabled",
+            relief="flat",
+            bd=0,
+            highlightthickness=0,
+            yscrollcommand=log_sb.set,
+        )
+        self._log.pack(fill=BOTH, expand=True, padx=4, pady=4)
+        log_sb.config(command=self._log.yview)
+        self._log.tag_config("ok",   foreground="#107C10")  # Microsoft green
+        self._log.tag_config("err",  foreground="#A4262C")  # Microsoft red
+        self._log.tag_config("info", foreground="#0078D4")  # Microsoft blue
+
+        ttk.Separator(content, orient=HORIZONTAL).pack(fill=X, pady=(14, 12))
+
+        # Action row — primary button right-aligned like MS dialogs
+        action_row = ttk.Frame(content)
+        action_row.pack(fill=X)
+        self._copy_btn = ttk.Button(
+            action_row,
+            text="Copy Macros",
+            command=self._run_copy,
+            bootstyle="primary",
+            width=18,
+        )
+        self._copy_btn.pack(side=RIGHT)
 
     def _browse_source(self):
         path = filedialog.askopenfilename(
