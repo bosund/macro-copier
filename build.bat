@@ -42,6 +42,14 @@ python -m nuitka ^
     --enable-plugin=tk-inter ^
     --windows-console-mode=disable ^
     --windows-icon-from-ico=icon.ico ^
+    --onefile-tempdir-spec="{CACHE_DIR}/{PRODUCT}/{VERSION}" ^
+    --product-name="VBA Macro Copier" ^
+    --product-version=1.0.1 ^
+    --file-version=1.0.1 ^
+    --company-name="Bo Sundgaard" ^
+    --file-description="VBA Macro Copier - Copy macros between Excel files" ^
+    --copyright="Copyright (c) 2026 Bo Sundgaard" ^
+    --lto=yes ^
     macro_copier.py
 
 if errorlevel 1 (
