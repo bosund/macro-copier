@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import base64; data = open\\('g:/macro-copier/macro-copier/icon.ico','rb'\\).read\\(\\); print\\(base64.b64encode\\(data\\).decode\\(\\)\\)\")",
+      "Bash(python -c ' *)"
+    ]
+  }
+}

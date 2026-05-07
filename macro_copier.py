@@ -2,7 +2,7 @@
 # Copyright (c) 2026 Bo Sundgaard — www.uniteapps.dk
 # MIT License
 
-__version__ = "1.00"
+__version__ = "1.01"
 
 import sys
 import zipfile
@@ -20,9 +20,18 @@ XLSM_WB_CT = "application/vnd.ms-excel.sheet.macroEnabled.main+xml"
 VBA_REL_TYPE = "http://schemas.microsoft.com/office/2006/relationships/vbaProject"
 
 
+def _exe_dir() -> Path:
+    if getattr(sys, "frozen", False):
+        # PyInstaller
+        return Path(sys.executable).parent
+    if "__compiled__" in globals():
+        # Nuitka — sys.argv[0] is the real .exe even in onefile mode
+        return Path(sys.argv[0]).resolve().parent
+    return Path(__file__).parent
+
+
 def find_source_file():
-    base = Path(sys.executable).parent if getattr(sys, "frozen", False) else Path(__file__).parent
-    candidate = base / "source.xlsm"
+    candidate = _exe_dir() / "source.xlsm"
     return candidate if candidate.exists() else None
 
 
@@ -96,7 +105,7 @@ class MacroCopierApp(ttk.Window):
         self._source_var = tk.StringVar()
         self._target_paths: list[str] = []
 
-        icon = Path(__file__).parent / "icon.ico"
+        icon = _exe_dir() / "icon.ico"
         if icon.exists():
             self.iconbitmap(str(icon))
 
